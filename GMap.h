@@ -4,12 +4,14 @@
 #include <iostream>
 #include <vector>
 #include "GTile.h"
+namespace level
+{
 //---------------------------------------------------------------------------
 class GMap
 {
     private:
-    int mapWidth;
-    int mapHeight;
+    int mmapWidth;
+    int mmapHeight;
 
     public:
     std::vector<std::vector<GTile *> > map_w;
@@ -22,4 +24,5 @@ class GMap
     void MoveCamera(int dx, int dy, SDL_Surface *scr);
 };
 //---------------------------------------------------------------------------
+}
 #endif // GMAP_H_INCLUDED

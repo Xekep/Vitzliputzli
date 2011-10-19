@@ -4,7 +4,7 @@
 int statesOfStepHero[4] = {0, 32, 0, 64};
 int stateOfStepHero = 0;
 //---------------------------------------------------------------------------
-GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
+level::GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
 {
     spritesOfHeroe = fileWithSprites;
 
@@ -26,7 +26,7 @@ GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
     stateOfStepHero = 0;
 }
 //---------------------------------------------------------------------------
-void GHero::MoveHero()
+void level::GHero::MoveHero()
 {
     int stayOldX = heroCoordinates.x;
 
@@ -77,7 +77,7 @@ void GHero::MoveHero()
 
 }
 //---------------------------------------------------------------------------
-void GHero::RePlace(SDL_KeyboardEvent evnt)
+void level::GHero::RePlace(SDL_KeyboardEvent evnt)
 {
     if( evnt.type == SDL_KEYDOWN )
     {
@@ -99,7 +99,7 @@ void GHero::RePlace(SDL_KeyboardEvent evnt)
     }
 }
 //---------------------------------------------------------------------------
-void GHero::DrawHero(SDL_Surface *scr, SDL_Rect coord)
+void level::GHero::DrawHero(SDL_Surface *scr, SDL_Rect coord)
 {
 
     if(stateHero&HERO_LEFT)

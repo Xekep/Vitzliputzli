@@ -2,7 +2,7 @@
 #include "SDL/SDL.h"
 #include "AdvancedGraphicFunctions.h"
 //---------------------------------------------------------------------------
-void GTile::Initial(SDL_Surface *tileSheet, int xPos, int yPos)
+void level::GTile::Initial(SDL_Surface *tileSheet, int xPos, int yPos)
 {
     tileSet = tileSheet;
     tilePosition.x = xPos;
@@ -11,7 +11,7 @@ void GTile::Initial(SDL_Surface *tileSheet, int xPos, int yPos)
     tilePosition.h = 32;
 }
 //---------------------------------------------------------------------------
-GTile::GTile(SDL_Surface *tileSheet, int xPos, int yPos)
+level::GTile::GTile(SDL_Surface *tileSheet, int xPos, int yPos)
 {
     tileSet = tileSheet;
     tilePosition.x = xPos;
@@ -20,7 +20,7 @@ GTile::GTile(SDL_Surface *tileSheet, int xPos, int yPos)
     tilePosition.h = 32;
 }
 //---------------------------------------------------------------------------
-void GTile::Draw(SDL_Surface *scr, SDL_Rect coord)
+void level::GTile::Draw(SDL_Surface *scr, SDL_Rect coord)
 {
     SDL_Rect tempRect;
     tempRect.x = tileCoordinates.x - coord.x;

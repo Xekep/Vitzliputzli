@@ -4,6 +4,8 @@
 #include "SDL/SDL.h"
 #include "GTile.h"
 
+namespace level
+{
 const int HERO_LEFT  = (1 << 0); //Герой мордой влево
 const int HERO_RIGHT = (1 << 1); //Герой мордой вправо
 const int JUMP_HERO  = (1 << 2); //Герой в прыжке
@@ -29,4 +31,5 @@ class GHero
     void DrawHero(SDL_Surface *scr, SDL_Rect coord);
 };
 //---------------------------------------------------------------------------
+}
 #endif // SUPERHERO_H_INCLUDED

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iomanip>
 #include "SDL/SDL.h"
+#include "LevelSettings.h"
 #include "GTimer.h"
 #include "GTile.h"
 #include "GMap.h"
@@ -29,8 +30,15 @@ int sY = 0;
 int speedX = 0;
 int speedY = 0;
 //---------------------------------------------------------------------------
-GMap *levelMap;
-GHero *fooHero;
+int level::screenWidth = SCREEN_WIDTH;
+int level::screenHeight = SCREEN_HEIGHT;
+int level::tileWidth = 32;
+int level::tileHeight = 32;
+int level::mapWidth = 60;
+int level::mapHeight = 30;
+//---------------------------------------------------------------------------
+level::GMap *levelMap;
+level::GHero *fooHero;
 //---------------------------------------------------------------------------
 #if defined( __WIN32__ ) || defined( _WIN32 )
 #include <windows.h>
@@ -57,7 +65,7 @@ int main( int argc, char* args[] )
 
     background = load_image( "Data/backgrounds/_background_003.bmp" );
 
-    fooHero = new GHero("Data/hero/hero.bmp", (SDL_Rect){32, 640, 32, 32} );
+    fooHero = new level::GHero("Data/hero/hero.bmp", (SDL_Rect){32, 640, 32, 32} );
     #include "lvl1_map.cpp" //карта уровня
 
     tileSheet[0] = load_image( "Data/tilesets/_tileset_001.bmp" );
@@ -65,7 +73,7 @@ int main( int argc, char* args[] )
     tileSheet[2] = load_image( "Data/tilesets/_tileset_003.bmp" );
     tileSheet[3] = load_image( "Data/tilesets/_tileset_004.bmp" );
 
-    levelMap = new GMap(60, 30);
+    levelMap = new level::GMap(60, 30);
 
     for(int y = 0; y < 30; ++y)
     {
@@ -73,7 +81,7 @@ int main( int argc, char* args[] )
         {
             if(tileMap[y][x] != -1)
             {
-                GTile *tempTile = new GTile(tileSheet[tileSetsMap[y][x]], trX[tileMap[y][x]], trY[tileMap[y][x]]);
+                level::GTile *tempTile = new level::GTile(tileSheet[tileSetsMap[y][x]], trX[tileMap[y][x]], trY[tileMap[y][x]]);
                 tempTile->SetCoordinates(x*32, y*32);
                 levelMap->map_w[y][x] = tempTile;
             }

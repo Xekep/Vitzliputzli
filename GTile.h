@@ -2,6 +2,8 @@
 #define GTILE_H_INCLUDED
 #include <iostream>
 #include "SDL/SDL.h"
+namespace level
+{
 //---------------------------------------------------------------------------
 class GTile
 {
@@ -21,4 +23,5 @@ class GTile
     void Draw(SDL_Surface *scr, SDL_Rect coord);
 };
 //---------------------------------------------------------------------------
+}
 #endif // GTILE_H_INCLUDED
