@@ -9,6 +9,8 @@ namespace level
     extern int tileHeight;
     extern int mapWidth;
     extern int mapHeight;
+    extern int tilesOnScreenWidth;
+    extern int tilesOnScreenHeight;
 //---------------------------------------------------------------------------
 }
 #endif // GTILE_H_INCLUDED

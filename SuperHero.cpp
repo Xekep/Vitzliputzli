@@ -1,4 +1,5 @@
 #include "SuperHero.h"
+#include "LevelSettings.h"
 #include "AdvancedGraphicFunctions.h"
 //---------------------------------------------------------------------------
 int statesOfStepHero[4] = {0, 32, 0, 64};
@@ -31,8 +32,10 @@ void level::GHero::MoveHero()
     int stayOldX = heroCoordinates.x;
 
     heroCoordinates.x += spdX;
-    if(heroCoordinates.x <= 0) heroCoordinates.x = 0;
-    else if(heroCoordinates.x > 1888) heroCoordinates.x = 1888; //широта карты - широта спрайта персонажа
+    if(heroCoordinates.x <= 0)
+        heroCoordinates.x = 0;
+    else if(heroCoordinates.x > level::mapWidth*level::tileWidth-level::tileWidth)
+        heroCoordinates.x = level::mapWidth*level::tileWidth-level::tileWidth; //широта карты - широта спрайта персонажа
 
     if(stayOldX != heroCoordinates.x)
     {
@@ -58,8 +61,10 @@ void level::GHero::MoveHero()
     }
     int stayOldY = heroCoordinates.y;
     heroCoordinates.y += (spdY + jmp);
-    if(heroCoordinates.y <= 0) heroCoordinates.y = 0;
-    else if(heroCoordinates.y > 928) heroCoordinates.y = 928;
+    if(heroCoordinates.y <= 0)
+        heroCoordinates.y = 0;
+    else if(heroCoordinates.y > level::mapHeight*level::tileHeight-level::tileHeight)
+        heroCoordinates.y = level::mapHeight*level::tileHeight-level::tileHeight;
 
     if(stayOldY != heroCoordinates.y)
         stateHero |= HERO_DOWN;

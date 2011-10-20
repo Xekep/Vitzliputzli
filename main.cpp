@@ -36,6 +36,8 @@ int level::tileWidth = 32;
 int level::tileHeight = 32;
 int level::mapWidth = 60;
 int level::mapHeight = 30;
+int level::tilesOnScreenWidth = 27;
+int level::tilesOnScreenHeight = 15;
 //---------------------------------------------------------------------------
 level::GMap *levelMap;
 level::GHero *fooHero;

@@ -36,19 +36,21 @@ level::GMap::~GMap()
 //---------------------------------------------------------------------------
 void level::GMap::MoveCamera(int dx, int dy, SDL_Surface *scr)
 {
-    framePosition.x = dx - level::screenWidth/2/*427*/;
+    framePosition.x = dx - level::screenWidth/2;
     if(framePosition.x <= 0)
         framePosition.x = 0;
-    else if(framePosition.x >= (level::screenWidth-level::mapWidth*level::tileWidth)/*1066*/)
-        framePosition.x = (level::screenWidth-level::mapWidth*level::tileWidth)/*1066*/; //широта_карты - широта_размера_окна
+    else if(framePosition.x >= level::mapWidth*level::tileWidth-level::screenWidth)
+        framePosition.x = level::mapWidth*level::tileWidth-level::screenWidth; //широта_карты - широта_размера_окна
 
-    framePosition.y = dy - 240;
-    if(framePosition.y <= 0) framePosition.y = 0;
-    else if(framePosition.y >= 480) framePosition.y = 480; //высота_карты - высота_размера_карты
+    framePosition.y = dy - level::screenHeight/2;
+    if(framePosition.y <= 0)
+        framePosition.y = 0;
+    else if(framePosition.y >= level::mapHeight*level::tileHeight-level::screenHeight)
+        framePosition.y = level::mapHeight*level::tileHeight-level::screenHeight; //высота_карты - высота_размера_карты
 
-    for(int i = framePosition.x/32; i < (framePosition.x+31)/32+27; ++i)
+    for(int i = framePosition.x/level::tileWidth; i < (framePosition.x+level::tileWidth-1)/level::tileWidth+level::tilesOnScreenWidth; ++i)
     {
-        for(int j = framePosition.y/32; j < (framePosition.y+31)/32+15; ++j )
+        for(int j = framePosition.y/level::tileHeight; j < (framePosition.y+level::tileHeight-1)/level::tileHeight+level::tilesOnScreenHeight; ++j )
         {
             if(i >= map_w[j].size()) continue;
             if(map_w[j][i] != NULL)
