@@ -6,6 +6,8 @@
 #include "GTile.h"
 namespace level
 {
+typedef std::vector<std::vector<GTile *> > tilesArray;
+
 //---------------------------------------------------------------------------
 class GMap
 {
@@ -14,7 +16,7 @@ class GMap
     int mmapHeight;
 
     public:
-    std::vector<std::vector<GTile *> > map_w;
+    tilesArray map_w;
     SDL_Rect framePosition;
 
     GMap();

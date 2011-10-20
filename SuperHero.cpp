@@ -1,9 +1,12 @@
 #include "SuperHero.h"
+#include "GMap.h"
 #include "LevelSettings.h"
 #include "AdvancedGraphicFunctions.h"
 //---------------------------------------------------------------------------
 int statesOfStepHero[4] = {0, 32, 0, 64};
 int stateOfStepHero = 0;
+//---------------------------------------------------------------------------
+CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, level::tilesArray map);
 //---------------------------------------------------------------------------
 level::GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
 {
@@ -11,6 +14,9 @@ level::GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
 
     heroCoordinates.x = pos.x;
     heroCoordinates.y = pos.y;
+
+    heroCoordinates.w = pos.w;
+    heroCoordinates.h = pos.h;
 
     heroSurface = load_image(spritesOfHeroe);
 
@@ -27,11 +33,23 @@ level::GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
     stateOfStepHero = 0;
 }
 //---------------------------------------------------------------------------
-void level::GHero::MoveHero()
+void level::GHero::MoveHero(tilesArray map)
 {
+    CollisionDetectWays fPos = MegaCollisionDetecter(heroCoordinates, spdX, (spdY+jmp),  map);
+
     int stayOldX = heroCoordinates.x;
 
-    heroCoordinates.x += spdX;
+    if(!fPos.LeftRight)
+        heroCoordinates.x += spdX;
+
+    else if(heroCoordinates.x%32)
+    {
+        if(spdX < 0)
+            heroCoordinates.x -= heroCoordinates.x%32;
+        else
+            heroCoordinates.x += 32-heroCoordinates.x%32;
+    }
+
     if(heroCoordinates.x <= 0)
         heroCoordinates.x = 0;
     else if(heroCoordinates.x > level::mapWidth*level::tileWidth-level::tileWidth)
@@ -54,13 +72,17 @@ void level::GHero::MoveHero()
 
     if((stateHero&JUMP_HERO) && (spdY+jmp < 16))
         jmp++;
-    else if ((stateHero&JUMP_HERO) && (spdY+jmp >= 16))
+    else if ((stateHero&JUMP_HERO) && (spdY+jmp >= 16) && fPos.TopBottom)
     {
         stateHero &= ~JUMP_HERO;
         jmp = 0;
     }
+
     int stayOldY = heroCoordinates.y;
-    heroCoordinates.y += (spdY + jmp);
+
+    if(!fPos.TopBottom)
+        heroCoordinates.y += (spdY + jmp);
+
     if(heroCoordinates.y <= 0)
         heroCoordinates.y = 0;
     else if(heroCoordinates.y > level::mapHeight*level::tileHeight-level::tileHeight)
@@ -120,4 +142,30 @@ void level::GHero::DrawHero(SDL_Surface *scr, SDL_Rect coord)
     SDL_BlitSurface( heroSurface, &vrtlHeroPosition, scr, &tempRect );
 }
 //---------------------------------------------------------------------------
+CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, level::tilesArray map)
+{
+    CollisionDetectWays cN = {false, false};
 
+    if(map[pos.y/32][(pos.x+dX)/32] != NULL)
+        cN.LeftRight = true;
+    if(map[pos.y/32][(pos.x+pos.w+dX)/32] != NULL)
+        cN.LeftRight = true;
+    if(map[(pos.y+pos.h)/32][(pos.x+dX)/32] != NULL)
+        cN.LeftRight = true;
+    if(map[(pos.y+pos.h)/32][(pos.x+pos.w+dX)/32] != NULL)
+        cN.LeftRight = true;
+
+
+    if(map[(pos.y+dY)/32][pos.x/32] != NULL)
+        cN.TopBottom = true;
+    if(map[(pos.y+dY)/32][(pos.x+pos.w)/32] != NULL)
+        cN.TopBottom = true;
+    if(map[(pos.y+pos.h+dY)/32][pos.x/32] != NULL)
+        cN.TopBottom = true;
+    if(map[(pos.y+pos.h+dY)/32][(pos.x+pos.w)/32] != NULL)
+        cN.TopBottom = true;
+
+
+    return cN;
+}
+//---------------------------------------------------------------------------

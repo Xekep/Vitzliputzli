@@ -67,7 +67,7 @@ int main( int argc, char* args[] )
 
     background = load_image( "Data/backgrounds/_background_003.bmp" );
 
-    fooHero = new level::GHero("Data/hero/hero.bmp", (SDL_Rect){32, 640, 32, 32} );
+    fooHero = new level::GHero("Data/hero/hero.bmp", (SDL_Rect){32, 608, 32, 32} );
     #include "lvl1_map.cpp" //карта уровня
 
     tileSheet[0] = load_image( "Data/tilesets/_tileset_001.bmp" );
@@ -106,7 +106,7 @@ int main( int argc, char* args[] )
                 quit = true;
         }
         apply_surface( 0, 0, background, screen );
-        fooHero->MoveHero();
+        fooHero->MoveHero(levelMap->map_w);
         levelMap->MoveCamera(fooHero->heroCoordinates.x, fooHero->heroCoordinates.y, screen);
         fooHero->DrawHero(screen, levelMap->framePosition);
 

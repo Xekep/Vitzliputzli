@@ -3,6 +3,7 @@
 #include <iostream>
 #include "SDL/SDL.h"
 #include "GTile.h"
+#include "GMap.h"
 
 namespace level
 {
@@ -25,11 +26,34 @@ class GHero
     int stateHero;                  //состояние героя
     public:
     SDL_Rect heroCoordinates;       //Координаты героя
-    void MoveHero();
+    void MoveHero(tilesArray map);
     void RePlace(SDL_KeyboardEvent evnt);
     GHero(std::string fileWithSprites, SDL_Rect pos);
     void DrawHero(SDL_Surface *scr, SDL_Rect coord);
 };
 //---------------------------------------------------------------------------
 }
+//---------------------------------------------------------------------------
+//typedef struct
+//{
+//    bool cLeftTop;
+//    bool cRightTop;
+//    bool cLeftBottom;
+//    bool cRightBottom;
+//
+//    bool cLeftTopUp;
+//    bool cRightTopUp;
+//    bool cLeftBottomDown;
+//    bool cRightBottomDown;
+//
+//} CollisionDetectWays;
+
+
+typedef struct
+{
+    bool LeftRight;
+    bool TopBottom;
+
+} CollisionDetectWays;
+//---------------------------------------------------------------------------
 #endif // SUPERHERO_H_INCLUDED
