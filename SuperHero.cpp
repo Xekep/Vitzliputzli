@@ -37,17 +37,19 @@ void level::GHero::MoveHero(tilesArray map)
 {
     CollisionDetectWays fPos = MegaCollisionDetecter(heroCoordinates, spdX, (spdY+jmp),  map);
 
-    int stayOldX = heroCoordinates.x;
+
 
     if(!fPos.LeftRight)
         heroCoordinates.x += spdX;
-
-    else if(heroCoordinates.x%32)
+    else
     {
-        if(spdX < 0)
-            heroCoordinates.x -= heroCoordinates.x%32;
-        else
-            heroCoordinates.x += 32-heroCoordinates.x%32;
+        if(heroCoordinates.x%32 != 0)
+        {
+            if(spdX < 0)
+                heroCoordinates.x = map[0][heroCoordinates.x/32]->tileCoordinates.x;
+            else if(spdX > 0)
+                heroCoordinates.x = map[0][(heroCoordinates.x+heroCoordinates.w-1)/32]->tileCoordinates.x;
+        }
     }
 
     if(heroCoordinates.x <= 0)
@@ -55,24 +57,20 @@ void level::GHero::MoveHero(tilesArray map)
     else if(heroCoordinates.x > level::mapWidth*level::tileWidth-level::tileWidth)
         heroCoordinates.x = level::mapWidth*level::tileWidth-level::tileWidth; //широта карты - широта спрайта персонажа
 
-    if(stayOldX != heroCoordinates.x)
+    if(spdX > 0)
     {
-        if(stayOldX < heroCoordinates.x)
-        {
-            stateHero |= HERO_RIGHT;
-            stateHero &= ~HERO_LEFT;
-        }
-        else if(stayOldX > heroCoordinates.x)
-        {
-            stateHero |= HERO_LEFT;
-            stateHero &= ~HERO_RIGHT;
-        }
-
+        stateHero |= HERO_RIGHT;
+        stateHero &= ~HERO_LEFT;
+    }
+    else if(spdX < 0)
+    {
+        stateHero |= HERO_LEFT;
+        stateHero &= ~HERO_RIGHT;
     }
 
     if((stateHero&JUMP_HERO) && (spdY+jmp < 16))
         jmp++;
-    else if ((stateHero&JUMP_HERO) && (spdY+jmp >= 16) && fPos.TopBottom)
+    else if ((stateHero&JUMP_HERO) && ((spdY+jmp >= 16) || fPos.TopBottom))
     {
         stateHero &= ~JUMP_HERO;
         jmp = 0;
@@ -81,7 +79,17 @@ void level::GHero::MoveHero(tilesArray map)
     int stayOldY = heroCoordinates.y;
 
     if(!fPos.TopBottom)
-        heroCoordinates.y += (spdY + jmp);
+        heroCoordinates.y += (spdY+jmp);
+    else
+    {
+        if(heroCoordinates.y%32 != 0)
+        {
+            if((spdY+jmp) < 0)
+                heroCoordinates.y = map[heroCoordinates.y/32][0]->tileCoordinates.y;
+            else if((spdY+jmp) > 0)
+                heroCoordinates.y = map[(heroCoordinates.y+heroCoordinates.h-1)/32][0]->tileCoordinates.y;
+        }
+    }
 
     if(heroCoordinates.y <= 0)
         heroCoordinates.y = 0;
@@ -148,21 +156,21 @@ CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, level::t
 
     if(map[pos.y/32][(pos.x+dX)/32] != NULL)
         cN.LeftRight = true;
-    if(map[pos.y/32][(pos.x+pos.w+dX)/32] != NULL)
+    if(map[pos.y/32][(pos.x+pos.w+dX-1)/32] != NULL)
         cN.LeftRight = true;
-    if(map[(pos.y+pos.h)/32][(pos.x+dX)/32] != NULL)
+    if(map[(pos.y+pos.h-1)/32][(pos.x+dX)/32] != NULL)
         cN.LeftRight = true;
-    if(map[(pos.y+pos.h)/32][(pos.x+pos.w+dX)/32] != NULL)
+    if(map[(pos.y+pos.h-1)/32][(pos.x+pos.w+dX-1)/32] != NULL)
         cN.LeftRight = true;
 
 
     if(map[(pos.y+dY)/32][pos.x/32] != NULL)
         cN.TopBottom = true;
-    if(map[(pos.y+dY)/32][(pos.x+pos.w)/32] != NULL)
+    if(map[(pos.y+dY)/32][(pos.x+pos.w-1)/32] != NULL)
         cN.TopBottom = true;
-    if(map[(pos.y+pos.h+dY)/32][pos.x/32] != NULL)
+    if(map[(pos.y+pos.h+dY-1)/32][pos.x/32] != NULL)
         cN.TopBottom = true;
-    if(map[(pos.y+pos.h+dY)/32][(pos.x+pos.w)/32] != NULL)
+    if(map[(pos.y+pos.h+dY-1)/32][(pos.x+pos.w-1)/32] != NULL)
         cN.TopBottom = true;
 
 

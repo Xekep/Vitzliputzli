@@ -2,15 +2,6 @@
 #include "SDL/SDL.h"
 #include "AdvancedGraphicFunctions.h"
 //---------------------------------------------------------------------------
-void level::GTile::Initial(SDL_Surface *tileSheet, int xPos, int yPos)
-{
-    tileSet = tileSheet;
-    tilePosition.x = xPos;
-    tilePosition.y = yPos;
-    tilePosition.w = 32;
-    tilePosition.h = 32;
-}
-//---------------------------------------------------------------------------
 level::GTile::GTile(SDL_Surface *tileSheet, int xPos, int yPos)
 {
     tileSet = tileSheet;
