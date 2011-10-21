@@ -6,7 +6,12 @@
 int statesOfStepHero[4] = {0, 32, 0, 64};
 int stateOfStepHero = 0;
 //---------------------------------------------------------------------------
-CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, level::tilesArray map);
+#define dx 9
+#define dy 1
+#define dw 14
+#define dh 31
+//---------------------------------------------------------------------------
+CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, const level::tilesArray &map);
 //---------------------------------------------------------------------------
 level::GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
 {
@@ -33,15 +38,19 @@ level::GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
     stateOfStepHero = 0;
 }
 //---------------------------------------------------------------------------
-void level::GHero::MoveHero(tilesArray map)
+void level::GHero::MoveHero(const tilesArray &map)
 {
     CollisionDetectWays fPos = MegaCollisionDetecter(heroCoordinates, spdX, (spdY+jmp),  map);
 
-
-
-    if(!fPos.LeftRight)
+/******************/
+    if((!fPos.LeftRight) && (spdX != 0))
+    {
         heroCoordinates.x += spdX;
-    else
+        stateOfStepHero++;
+        if(stateOfStepHero >= 4)
+            stateOfStepHero = 0;
+    }
+    else if(fPos.LeftRight && (spdX != 0))
     {
         if(heroCoordinates.x%32 != 0)
         {
@@ -50,29 +59,21 @@ void level::GHero::MoveHero(tilesArray map)
             else if(spdX > 0)
                 heroCoordinates.x = map[0][(heroCoordinates.x+heroCoordinates.w-1)/32]->tileCoordinates.x;
         }
+        stateOfStepHero = 0;
     }
+    else
+        stateOfStepHero = 0;
+/***  TODO: в дальнейшем, когда карт будет много входы за пределы карты надо будет сделать переходом на другую карту  ***/
 
-    if(heroCoordinates.x <= 0)
-        heroCoordinates.x = 0;
-    else if(heroCoordinates.x > level::mapWidth*level::tileWidth-level::tileWidth)
-        heroCoordinates.x = level::mapWidth*level::tileWidth-level::tileWidth; //широта карты - широта спрайта персонажа
+/********************/
 
-    if(spdX > 0)
-    {
-        stateHero |= HERO_RIGHT;
-        stateHero &= ~HERO_LEFT;
-    }
-    else if(spdX < 0)
-    {
-        stateHero |= HERO_LEFT;
-        stateHero &= ~HERO_RIGHT;
-    }
 
-    if((stateHero&JUMP_HERO) && (spdY+jmp < 16))
+    if(jmp < 0)
         jmp++;
-    else if ((stateHero&JUMP_HERO) && ((spdY+jmp >= 16) || fPos.TopBottom))
+
+    else if ((!stateHero&JUMP_HERO) || (jmp >= 0) || fPos.TopBottom)
     {
-        stateHero &= ~JUMP_HERO;
+        //stateHero &= ~JUMP_HERO;
         jmp = 0;
     }
 
@@ -82,34 +83,27 @@ void level::GHero::MoveHero(tilesArray map)
         heroCoordinates.y += (spdY+jmp);
     else
     {
+        stateHero &= ~JUMP_HERO;
         if(heroCoordinates.y%32 != 0)
         {
             if((spdY+jmp) < 0)
+            {
                 heroCoordinates.y = map[heroCoordinates.y/32][0]->tileCoordinates.y;
+//                stateHero &= ~HERO_DOWN;
+            }
             else if((spdY+jmp) > 0)
+            {
                 heroCoordinates.y = map[(heroCoordinates.y+heroCoordinates.h-1)/32][0]->tileCoordinates.y;
+//                stateHero &= ~JUMP_HERO;
+            }
         }
     }
-
-    if(heroCoordinates.y <= 0)
-        heroCoordinates.y = 0;
-    else if(heroCoordinates.y > level::mapHeight*level::tileHeight-level::tileHeight)
-        heroCoordinates.y = level::mapHeight*level::tileHeight-level::tileHeight;
+/***  TODO: в дальнейшем, когда карт будет много входы за пределы карты надо будет сделать переходом на другую карту  ***/
 
     if(stayOldY != heroCoordinates.y)
         stateHero |= HERO_DOWN;
     else
         stateHero &= ~HERO_DOWN;
-
-
-    if(spdX)
-    {
-        stateOfStepHero++;
-        if(stateOfStepHero >= 4) stateOfStepHero = 0;
-    }
-    else
-        stateOfStepHero = 0;
-
 }
 //---------------------------------------------------------------------------
 void level::GHero::RePlace(SDL_KeyboardEvent evnt)
@@ -121,13 +115,21 @@ void level::GHero::RePlace(SDL_KeyboardEvent evnt)
             if(!(stateHero&(HERO_DOWN|JUMP_HERO)))
             {
                 stateHero |= JUMP_HERO;
-                jmp = -32;
+                jmp = -33;
             }
         }
         if(evnt.keysym.sym == SDLK_LEFT)
+        {
             spdX = -8;
+            stateHero |= HERO_LEFT;
+            stateHero &= ~HERO_RIGHT;
+        }
         else if(evnt.keysym.sym == SDLK_RIGHT)
+        {
             spdX = 8;
+            stateHero |= HERO_RIGHT;
+            stateHero &= ~HERO_LEFT;
+        }
     }
     else if( evnt.type == SDL_KEYUP )
     {
@@ -152,7 +154,7 @@ void level::GHero::DrawHero(SDL_Surface *scr, SDL_Rect coord)
     SDL_BlitSurface( heroSurface, &vrtlHeroPosition, scr, &tempRect );
 }
 //---------------------------------------------------------------------------
-CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, level::tilesArray map)
+CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, const level::tilesArray &map)
 {
     CollisionDetectWays cN = {false, false};
 
@@ -165,7 +167,6 @@ CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, level::t
     if(map[(pos.y+pos.h-1)/32][(pos.x+pos.w+dX-1)/32] != NULL)
         cN.LeftRight = true;
 
-
     if(map[(pos.y+dY)/32][pos.x/32] != NULL)
         cN.TopBottom = true;
     if(map[(pos.y+dY)/32][(pos.x+pos.w-1)/32] != NULL)
@@ -174,7 +175,6 @@ CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, level::t
         cN.TopBottom = true;
     if(map[(pos.y+pos.h+dY-1)/32][(pos.x+pos.w-1)/32] != NULL)
         cN.TopBottom = true;
-
 
     return cN;
 }

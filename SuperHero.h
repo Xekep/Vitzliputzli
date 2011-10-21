@@ -22,11 +22,11 @@ class GHero
     std::string spritesOfHeroe;     //файл со спрайтами героя
     SDL_Surface *heroSurface;
     SDL_Rect realHeroCoordinates;   //Координаты прямоугольника, описанного вокруг героя, нужно для просчёта коллизий.
-    SDL_Rect vrtlHeroPosition;
+    SDL_Rect vrtlHeroPosition;      //Координаты героя на большом спрайте
     int stateHero;                  //состояние героя
     public:
     SDL_Rect heroCoordinates;       //Координаты героя
-    void MoveHero(tilesArray map);
+    void MoveHero(const tilesArray &map);
     void RePlace(SDL_KeyboardEvent evnt);
     GHero(std::string fileWithSprites, SDL_Rect pos);
     void DrawHero(SDL_Surface *scr, SDL_Rect coord);
@@ -34,21 +34,6 @@ class GHero
 //---------------------------------------------------------------------------
 }
 //---------------------------------------------------------------------------
-//typedef struct
-//{
-//    bool cLeftTop;
-//    bool cRightTop;
-//    bool cLeftBottom;
-//    bool cRightBottom;
-//
-//    bool cLeftTopUp;
-//    bool cRightTopUp;
-//    bool cLeftBottomDown;
-//    bool cRightBottomDown;
-//
-//} CollisionDetectWays;
-
-
 typedef struct
 {
     bool LeftRight;
