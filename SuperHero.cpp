@@ -116,21 +116,23 @@ void level::GHero::RePlace(SDL_KeyboardEvent evnt)
 {
     if( evnt.type == SDL_KEYDOWN )
     {
-        switch( evnt.keysym.sym )
+        if(evnt.keysym.sym == SDLK_SPACE)
         {
-            case SDLK_SPACE: if(!(stateHero&(HERO_DOWN|JUMP_HERO))) { stateHero |= JUMP_HERO; jmp = -32; } break;
-            case SDLK_LEFT: spdX = -8; break;
-            case SDLK_RIGHT: spdX = 8; break;
+            if(!(stateHero&(HERO_DOWN|JUMP_HERO)))
+            {
+                stateHero |= JUMP_HERO;
+                jmp = -32;
+            }
         }
+        if(evnt.keysym.sym == SDLK_LEFT)
+            spdX = -8;
+        else if(evnt.keysym.sym == SDLK_RIGHT)
+            spdX = 8;
     }
-    //If a key was released
     else if( evnt.type == SDL_KEYUP )
     {
-        switch( evnt.keysym.sym )
-        {
-            case SDLK_LEFT: spdX = 0; break;
-            case SDLK_RIGHT: spdX = 0; break;
-        }
+        if((evnt.keysym.sym == SDLK_LEFT) || (evnt.keysym.sym == SDLK_RIGHT))
+            spdX = 0;
     }
 }
 //---------------------------------------------------------------------------

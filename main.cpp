@@ -73,7 +73,6 @@ int main( int argc, char* args[] )
     tileSheet[0] = load_image( "Data/tilesets/_tileset_001.bmp" );
     tileSheet[1] = load_image( "Data/tilesets/_tileset_002.bmp" );
     tileSheet[2] = load_image( "Data/tilesets/_tileset_003.bmp" );
-    tileSheet[3] = load_image( "Data/tilesets/_tileset_004.bmp" );
 
     levelMap = new level::GMap(60, 30);
 
