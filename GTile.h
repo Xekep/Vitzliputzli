@@ -7,19 +7,13 @@ namespace level
 //---------------------------------------------------------------------------
 class GTile
 {
-    private:
-
-    int type;
-    SDL_Surface *tileSet;
     public:
-
+    int numTile;
     SDL_Rect tilePosition;    //позиция тайла на тайлшите
     SDL_Rect tileCoordinates; //позиция тайла на карте
 
-    GTile() {};
-    GTile(SDL_Surface *tileSheet, int xPos, int yPos);
+    GTile(int nt, int xPos, int yPos);
     void SetCoordinates(int X, int Y) { tileCoordinates.x = X; tileCoordinates.y = Y; };
-    void Draw(SDL_Surface *scr, SDL_Rect coord);
 };
 //---------------------------------------------------------------------------
 }

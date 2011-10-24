@@ -3,6 +3,7 @@
 //---------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
+#include "SDL/SDL.h"
 #include "GTile.h"
 namespace level
 {
@@ -19,7 +20,8 @@ class GMap
     tilesArray map_w;
     SDL_Rect framePosition;
 
-    GMap();
+    std::vector<SDL_Surface *> tileSets;
+
     GMap(int mW, int mH);
     ~GMap();
 

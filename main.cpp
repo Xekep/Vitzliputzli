@@ -20,7 +20,6 @@ const int SCREEN_BPP = 24;
 //---------------------------------------------------------------------------
 SDL_Surface *background = NULL;
 SDL_Surface *screen = NULL;
-SDL_Surface *tileSheet[4] = {NULL, NULL, NULL, NULL};
 
 extern int trX[300];
 extern int trY[300];
@@ -70,11 +69,11 @@ int main( int argc, char* args[] )
     fooHero = new level::GHero("Data/hero/hero.bmp", (SDL_Rect){32, 608, 32, 32} );
     #include "lvl1_map.cpp" //карта уровня
 
-    tileSheet[0] = load_image( "Data/tilesets/_tileset_001.bmp" );
-    tileSheet[1] = load_image( "Data/tilesets/_tileset_002.bmp" );
-    tileSheet[2] = load_image( "Data/tilesets/_tileset_003.bmp" );
-
     levelMap = new level::GMap(60, 30);
+
+    levelMap->tileSets.push_back(load_image( "Data/tilesets/_tileset_001.bmp" ));
+    levelMap->tileSets.push_back(load_image( "Data/tilesets/_tileset_002.bmp" ));
+    levelMap->tileSets.push_back(load_image( "Data/tilesets/_tileset_003.bmp" ));
 
     for(int y = 0; y < 30; ++y)
     {
@@ -82,7 +81,7 @@ int main( int argc, char* args[] )
         {
             if(tileMap[y][x] != -1)
             {
-                level::GTile *tempTile = new level::GTile(tileSheet[tileSetsMap[y][x]], trX[tileMap[y][x]], trY[tileMap[y][x]]);
+                level::GTile *tempTile = new level::GTile(tileSetsMap[y][x], trX[tileMap[y][x]], trY[tileMap[y][x]]);
                 tempTile->SetCoordinates(x*32, y*32);
                 levelMap->map_w[y][x] = tempTile;
             }

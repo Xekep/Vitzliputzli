@@ -52,11 +52,16 @@ void level::GMap::MoveCamera(int dx, int dy, SDL_Surface *scr)
     {
         for(int j = framePosition.y/level::tileHeight; j < (framePosition.y+level::tileHeight-1)/level::tileHeight+level::tilesOnScreenHeight; ++j )
         {
-            if(i >= map_w[j].size()) continue;
-            if(map_w[j][i] != NULL)
-            {
-                map_w[j][i]->Draw(scr, framePosition);
-            }
+            if(i >= level::mapWidth)
+                continue;
+
+            if(map_w[j][i] == NULL)
+                continue;
+
+            SDL_Rect tempRect;
+            tempRect.x = map_w[j][i]->tileCoordinates.x - framePosition.x;
+            tempRect.y = map_w[j][i]->tileCoordinates.y - framePosition.y;
+            SDL_BlitSurface( tileSets[map_w[j][i]->numTile], &map_w[j][i]->tilePosition, scr, &tempRect );
         }
     }
 }
