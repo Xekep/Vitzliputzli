@@ -11,7 +11,7 @@ int stateOfStepHero = 0;
 #define dw 14
 #define dh 31
 //---------------------------------------------------------------------------
-CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, const level::tilesArray &map);
+CollisionDetectWays MegaCollisionDetecter(int dX, int dY, const level::tilesArray &map);
 //---------------------------------------------------------------------------
 level::GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
 {
@@ -34,76 +34,92 @@ level::GHero::GHero(std::string fileWithSprites, SDL_Rect pos)
     vrtlHeroPosition.h = 32;
     vrtlHeroPosition.w = 32;
 
-    stateHero = HERO_RIGHT;
+    stateHero |= HERO_RIGHT;
     stateOfStepHero = 0;
 }
 //---------------------------------------------------------------------------
 void level::GHero::MoveHero(const tilesArray &map)
 {
-    CollisionDetectWays fPos = MegaCollisionDetecter(heroCoordinates, spdX, (spdY+jmp),  map);
+    CollisionDetectWays fPos;
 
 /******************/
-    if((!fPos.LeftRight) && (spdX != 0))
+    fPos = MegaCollisionDetecter(heroCoordinates.x+spdX, heroCoordinates.y,  map);
+
+    if(spdX < 0)
     {
-        heroCoordinates.x += spdX;
-        stateOfStepHero++;
-        if(stateOfStepHero >= 4)
-            stateOfStepHero = 0;
-    }
-    else if(fPos.LeftRight && (spdX != 0))
-    {
-        if(heroCoordinates.x%32 != 0)
+        if(!fPos.cLeftBottom && !fPos.cLeftTop)
         {
-            if(spdX < 0)
-                heroCoordinates.x = map[0][heroCoordinates.x/32]->tileCoordinates.x;
-            else if(spdX > 0)
-                heroCoordinates.x = map[0][(heroCoordinates.x+heroCoordinates.w-1)/32]->tileCoordinates.x;
+            heroCoordinates.x += spdX;
+            stateOfStepHero++;
+            if(stateOfStepHero >= 4)
+                stateOfStepHero = 0;
         }
-        stateOfStepHero = 0;
+        else
+        {
+            heroCoordinates.x = map[0][heroCoordinates.x/32]->tileCoordinates.x;
+            stateOfStepHero = 0;
+        }
     }
-    else
-        stateOfStepHero = 0;
+    else if(spdX > 0)
+    {
+        if(!fPos.cRightBottom && !fPos.cRightTop)
+        {
+            heroCoordinates.x += spdX;
+            stateOfStepHero++;
+            if(stateOfStepHero >= 4)
+                stateOfStepHero = 0;
+        }
+        else
+        {
+            heroCoordinates.x = map[0][(heroCoordinates.x+heroCoordinates.w-1)/32]->tileCoordinates.x;
+            stateOfStepHero = 0;
+        }
+    }
 /***  TODO: в дальнейшем, когда карт будет много входы за пределы карты надо будет сделать переходом на другую карту  ***/
 
 /********************/
-
-
     if(jmp < 0)
         jmp++;
-
-    else if ((!stateHero&JUMP_HERO) || (jmp >= 0) || fPos.TopBottom)
+    else if ((!stateHero&JUMP_HERO) || (jmp >= 0))
     {
-        //stateHero &= ~JUMP_HERO;
         jmp = 0;
     }
 
-    int stayOldY = heroCoordinates.y;
+    fPos = MegaCollisionDetecter(heroCoordinates.x, heroCoordinates.y+(spdY+jmp),  map);
 
-    if(!fPos.TopBottom)
-        heroCoordinates.y += (spdY+jmp);
-    else
+    if((spdY+jmp) < 0)
     {
-        stateHero &= ~JUMP_HERO;
-        if(heroCoordinates.y%32 != 0)
+        if(!fPos.cRightTop && !fPos.cLeftTop)
         {
-            if((spdY+jmp) < 0)
-            {
-                heroCoordinates.y = map[heroCoordinates.y/32][0]->tileCoordinates.y;
-//                stateHero &= ~HERO_DOWN;
-            }
-            else if((spdY+jmp) > 0)
-            {
-                heroCoordinates.y = map[(heroCoordinates.y+heroCoordinates.h-1)/32][0]->tileCoordinates.y;
-//                stateHero &= ~JUMP_HERO;
-            }
+            heroCoordinates.y += (spdY+jmp);
+            stateHero &= ~HERO_DOWN;
+            stateHero |= JUMP_HERO;
+        }
+        else
+        {
+            heroCoordinates.y = map[heroCoordinates.y/32][0]->tileCoordinates.y;
+            jmp = -spdY;
+            stateHero &= ~JUMP_HERO;
+            stateHero |= HERO_DOWN;
         }
     }
-/***  TODO: в дальнейшем, когда карт будет много входы за пределы карты надо будет сделать переходом на другую карту  ***/
+    else if((spdY+jmp) > 0)
+    {
+        if(!fPos.cRightBottom && !fPos.cLeftBottom)
+        {
+            heroCoordinates.y += (spdY+jmp);
+            stateHero |= HERO_DOWN;
+            stateHero &= ~JUMP_HERO;
+        }
+        else
+        {
+            heroCoordinates.y = map[(heroCoordinates.y+heroCoordinates.h-1)/32][0]->tileCoordinates.y;
+            stateHero &= ~HERO_DOWN;
+            stateHero &= ~JUMP_HERO;
+        }
+    }
 
-    if(stayOldY != heroCoordinates.y)
-        stateHero |= HERO_DOWN;
-    else
-        stateHero &= ~HERO_DOWN;
+/***  TODO: в дальнейшем, когда карт будет много входы за пределы карты надо будет сделать переходом на другую карту  ***/
 }
 //---------------------------------------------------------------------------
 void level::GHero::RePlace(SDL_KeyboardEvent evnt)
@@ -154,27 +170,18 @@ void level::GHero::DrawHero(SDL_Surface *scr, SDL_Rect coord)
     SDL_BlitSurface( heroSurface, &vrtlHeroPosition, scr, &tempRect );
 }
 //---------------------------------------------------------------------------
-CollisionDetectWays MegaCollisionDetecter(SDL_Rect pos, int dX, int dY, const level::tilesArray &map)
+CollisionDetectWays MegaCollisionDetecter(int dX, int dY, const level::tilesArray &map)
 {
-    CollisionDetectWays cN = {false, false};
+    CollisionDetectWays cN = {false, false, false, false};
 
-    if(map[pos.y/32][(pos.x+dX)/32] != NULL)
-        cN.LeftRight = true;
-    if(map[pos.y/32][(pos.x+pos.w+dX-1)/32] != NULL)
-        cN.LeftRight = true;
-    if(map[(pos.y+pos.h-1)/32][(pos.x+dX)/32] != NULL)
-        cN.LeftRight = true;
-    if(map[(pos.y+pos.h-1)/32][(pos.x+pos.w+dX-1)/32] != NULL)
-        cN.LeftRight = true;
-
-    if(map[(pos.y+dY)/32][pos.x/32] != NULL)
-        cN.TopBottom = true;
-    if(map[(pos.y+dY)/32][(pos.x+pos.w-1)/32] != NULL)
-        cN.TopBottom = true;
-    if(map[(pos.y+pos.h+dY-1)/32][pos.x/32] != NULL)
-        cN.TopBottom = true;
-    if(map[(pos.y+pos.h+dY-1)/32][(pos.x+pos.w-1)/32] != NULL)
-        cN.TopBottom = true;
+    if(map[dY/32][dX/32] != NULL)
+        cN.cLeftTop = true;
+    if(map[dY/32][(dX+31)/32] != NULL)
+        cN.cRightTop = true;
+    if(map[(dY+31)/32][dX/32] != NULL)
+        cN.cLeftBottom = true;
+    if(map[(dY+31)/32][(dX+31)/32] != NULL)
+        cN.cRightBottom = true;
 
     return cN;
 }

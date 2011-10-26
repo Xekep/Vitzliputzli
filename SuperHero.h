@@ -36,8 +36,10 @@ class GHero
 //---------------------------------------------------------------------------
 typedef struct
 {
-    bool LeftRight;
-    bool TopBottom;
+    bool cLeftTop;
+    bool cLeftBottom;
+    bool cRightTop;
+    bool cRightBottom;
 
 } CollisionDetectWays;
 //---------------------------------------------------------------------------

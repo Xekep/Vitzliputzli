@@ -23,11 +23,6 @@ SDL_Surface *screen = NULL;
 
 extern int trX[300];
 extern int trY[300];
-
-int sX = 0;
-int sY = 0;
-int speedX = 0;
-int speedY = 0;
 //---------------------------------------------------------------------------
 int level::screenWidth = SCREEN_WIDTH;
 int level::screenHeight = SCREEN_HEIGHT;
