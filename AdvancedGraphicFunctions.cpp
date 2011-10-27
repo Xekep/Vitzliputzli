@@ -2,7 +2,7 @@
 //---------------------------------------------------------------------------
 SDL_Surface *load_image( std::string filename )
 {
-    SDL_Surface* loadedImage = SDL_LoadBMP( filename.c_str() );
+    SDL_Surface *loadedImage = SDL_LoadBMP( filename.c_str() );
     if( loadedImage != NULL )
     {
         loadedImage = SDL_DisplayFormat( loadedImage );
@@ -13,7 +13,7 @@ SDL_Surface *load_image( std::string filename )
     return loadedImage;
 }
 //---------------------------------------------------------------------------
-void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination )
+void apply_surface( int x, int y, SDL_Surface *source, SDL_Surface *destination )
 {
     SDL_Rect offset;
     offset.x = x;

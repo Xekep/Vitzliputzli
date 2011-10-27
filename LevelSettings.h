@@ -1,5 +1,5 @@
-#ifndef LEVELSETTINGS_H_INCLUDED
-#define LEVELSETTINGS_H_INCLUDED
+#ifndef VITZLIPUTZLI_LEVELSETTINGS_H_
+#define VITZLIPUTZLI_LEVELSETTINGS_H_
 namespace level
 {
 //---------------------------------------------------------------------------
@@ -13,4 +13,4 @@ namespace level
     extern int tilesOnScreenHeight;
 //---------------------------------------------------------------------------
 }
-#endif // GTILE_H_INCLUDED
+#endif // VITZLIPUTZLI_LEVELSETTINGS_H_
