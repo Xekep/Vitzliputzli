@@ -1,5 +1,5 @@
-#ifndef SUPERHERO_H_INCLUDED
-#define SUPERHERO_H_INCLUDED
+#ifndef VITZLIPUTZLI_SUPERHERO_H_
+#define VITZLIPUTZLI_SUPERHERO_H_
 #include <iostream>
 #include "SDL/SDL.h"
 #include "GTile.h"
@@ -43,4 +43,4 @@ typedef struct
 
 } CollisionDetectWays;
 //---------------------------------------------------------------------------
-#endif // SUPERHERO_H_INCLUDED
+#endif // VITZLIPUTZLI_SUPERHERO_H_

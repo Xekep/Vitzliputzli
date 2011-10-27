@@ -1,5 +1,5 @@
-#ifndef GMAP_H_INCLUDED
-#define GMAP_H_INCLUDED
+#ifndef VITZLIPUTZLI_GMAP_H_
+#define VITZLIPUTZLI_GMAP_H_
 //---------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
@@ -29,4 +29,4 @@ class GMap
 };
 //---------------------------------------------------------------------------
 }
-#endif // GMAP_H_INCLUDED
+#endif // VITZLIPUTZLI_GMAP_H_

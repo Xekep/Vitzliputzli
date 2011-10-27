@@ -1,5 +1,5 @@
-#ifndef ADVANCEDGRAPHICFUNCTIONS_H_INCLUDED
-#define ADVANCEDGRAPHICFUNCTIONS_H_INCLUDED
+#ifndef VITZLIPUTZLI_ADVANCEDGRAPHICFUNCTIONS_H_
+#define VITZLIPUTZLI_ADVANCEDGRAPHICFUNCTIONS_H_
 
 #include "SDL/SDL.h"
 #include <iostream>
@@ -10,4 +10,4 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination 
 //---------------------------------------------------------------------------
 
 
-#endif // ADVANCEDGRAPHICFUNCTIONS_H_INCLUDED
+#endif // VITZLIPUTZLI_ADVANCEDGRAPHICFUNCTIONS_H_

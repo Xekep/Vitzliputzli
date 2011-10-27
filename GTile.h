@@ -1,5 +1,5 @@
-#ifndef GTILE_H_INCLUDED
-#define GTILE_H_INCLUDED
+#ifndef VITZLIPUTZLI_GTILE_H_
+#define VITZLIPUTZLI_GTILE_H_
 #include <iostream>
 #include "SDL/SDL.h"
 namespace level
@@ -17,4 +17,4 @@ class GTile
 };
 //---------------------------------------------------------------------------
 }
-#endif // GTILE_H_INCLUDED
+#endif // VITZLIPUTZLI_GTILE_H_

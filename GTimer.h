@@ -1,5 +1,5 @@
-#ifndef GTIMER_H_INCLUDED
-#define GTIMER_H_INCLUDED
+#ifndef VITZLIPUTZLI_GTIMER_H_
+#define VITZLIPUTZLI_GTIMER_H_
 
 class Timer
 {
@@ -32,4 +32,4 @@ class Timer
     bool is_paused();
 };
 
-#endif // GTIMER_H_INCLUDED
+#endif // VITZLIPUTZLI_GTIMER_H_
